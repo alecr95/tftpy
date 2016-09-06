@@ -1,7 +1,7 @@
 """This module implements the packet types of TFTP itself, and the
 corresponding encode and decode methods for them."""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+
 import struct
 import sys
 from .TftpShared import *
@@ -139,7 +139,7 @@ class TftpPacketInitial(TftpPacket, TftpPacketWithOptions):
             raise AssertionError("Unsupported mode: %s" % self.mode)
         # Add options.
         options_list = []
-        if len(self.options.keys()) > 0:
+        if len(list(self.options.keys())) > 0:
             log.debug("there are options to encode")
             for key in self.options:
                 # Populate the option name

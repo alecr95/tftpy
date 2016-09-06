@@ -3,7 +3,7 @@ instance of the server, and then run the listen() method to listen for client
 requests. Logging is performed via a standard logging object set in
 TftpShared."""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+
 import socket, os, time
 import select
 import threading
@@ -12,6 +12,7 @@ from .TftpShared import *
 from .TftpPacketTypes import *
 from .TftpPacketFactory import TftpPacketFactory
 from .TftpContexts import TftpContextServer
+import collections
 
 class TftpServer(TftpSession):
     """This class implements a tftp server object. Run the listen() method to
@@ -52,9 +53,8 @@ class TftpServer(TftpSession):
 
         for name in 'dyn_file_func', 'upload_open':
             attr = getattr(self, name)
-            if attr and not callable(attr):
-                raise TftpException, "%s supplied, but it is not callable." % (
-                    name,)
+            if attr and not isinstance(attr, collections.Callable):
+                raise TftpException("%s supplied, but it is not callable." % name)
         if os.path.exists(self.root):
             log.debug("tftproot %s does exist", self.root)
             if not os.path.isdir(self.root):
@@ -172,7 +172,7 @@ class TftpServer(TftpSession):
                         log.warn("received traffic on main socket for "
                                  "existing session??")
                     log.info("Currently handling these sessions:")
-                    for session_key, session in self.sessions.items():
+                    for session_key, session in list(self.sessions.items()):
                         log.info("    %s" % session)
 
                 else:
