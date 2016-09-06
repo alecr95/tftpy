@@ -8,13 +8,12 @@ As a client of tftpy, this is the only module that you should need to import
 directly. The TftpClient and TftpServer classes can be reached through it.
 """
 
-
 import sys
 
 # Make sure that this is at least Python 2.3
 required_version = (2, 3)
-if sys.version_info < required_version:
-    raise ImportError("Requires at least Python 2.3")
+if sys.version_info[:2] < required_version:
+    raise ImportError("Requires at least Python 2.3 but found %s" % str(sys.version_info))
 
 from .TftpShared import *
 from .TftpPacketTypes import *
